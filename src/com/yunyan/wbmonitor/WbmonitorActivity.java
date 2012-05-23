@@ -26,12 +26,13 @@ public class WbmonitorActivity extends Activity{
 	private OnClickListener mOAuthBtnListener = new OnClickListener() {
 		public void onClick(View v) {
 			Toast.makeText(getApplicationContext(), "OAuth", Toast.LENGTH_LONG).show();	
-			Weibo wb = Weibo.getInstance();
+			Weibo wb = oAuthHelper.getWeibo();
 			
 			try{
-				RequestToken token = wb.getRequestToken(getApplicationContext(), APPKEY, APPSECRET, URL_CALLBACK);				
+				RequestToken rqToken = wb.getRequestToken(getApplicationContext(), APPKEY, APPSECRET, URL_CALLBACK);
+				oAuthHelper.getInstance().setRequestToken(rqToken);
 	
-				Uri uri = Uri.parse(Weibo.URL_AUTHENTICATION + "?display=wap2.0&oauth_token=" + token.getToken() + "&from=" + WbmonitorActivity.FROM);
+				Uri uri = Uri.parse(Weibo.URL_AUTHENTICATION + "?display=wap2.0&oauth_token=" + rqToken.getToken() + "&from=" + WbmonitorActivity.FROM);
 				startActivity(new Intent(Intent.ACTION_VIEW, uri));
 			} catch (Exception e) {
 				Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
