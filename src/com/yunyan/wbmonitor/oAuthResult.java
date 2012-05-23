@@ -1,10 +1,10 @@
 package com.yunyan.wbmonitor;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +12,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.weibo.net.AccessToken;
+import com.weibo.net.DialogError;
 import com.weibo.net.Weibo;
+import com.weibo.net.WeiboDialogListener;
 import com.weibo.net.WeiboException;
 import com.weibo.net.WeiboParameters;
 
@@ -50,18 +53,21 @@ public class oAuthResult extends Activity {
 		Button btnGo = (Button)findViewById(R.id.Button01);
 		btnGo.setOnClickListener(mGoClickListner);
 		
-		Uri uri = this.getIntent().getData();	
-		
-		
-		String oauth_verifier = uri.getQueryParameter("oauth_verifier");
-		oAuthHelper.getWeibo().addOauthverifier(oauth_verifier);
-		
-		try {
-			oAuthHelper.getInstance().setAccessToken(oAuthHelper.getWeibo().generateAccessToken(getApplicationContext(), null));
-		}catch (Exception e){
-			Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
-		}
+//		Uri uri = this.getIntent().getData();	
+//		
+//		
+//		String oauth_verifier = uri.getQueryParameter("oauth_verifier");
+//		oAuthHelper.getWeibo().addOauthverifier(oauth_verifier);
+//		
+//		try {
+//			oAuthHelper.getInstance().setAccessToken(oAuthHelper.getWeibo().generateAccessToken(getApplicationContext(), null));
+//		}catch (Exception e){
+//			Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+//		}
 
 	}
+	
+
+
 
 }
