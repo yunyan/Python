@@ -1,11 +1,24 @@
 package com.yunyan.wbmonitor;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
+
+import com.weibo.net.WeiboException;
+
 public class WeiboAPI {
-static final String public_timeline = "statuses/public_timeline" ;  //	»ñÈ¡×îĞÂµÄ¹«¹²Î¢²©
-static final String friends_timeline = "statuses/friends_timeline"; //	»ñÈ¡µ±Ç°µÇÂ¼ÓÃ»§¼°ÆäËù¹Ø×¢ÓÃ»§µÄ×îĞÂÎ¢²©
-static final String home_timeline = "statuses/home_timeline";	//»ñÈ¡µ±Ç°µÇÂ¼ÓÃ»§¼°ÆäËù¹Ø×¢ÓÃ»§µÄ×îĞÂÎ¢²©" +
+	
+	private static Map<String,SimpleDateFormat> formatMap = new HashMap<String,SimpleDateFormat>();
+	
+	static final String public_timeline = "statuses/public_timeline" ;  //	»ñÈ¡×îĞÂµÄ¹«¹²Î¢²©
+	static final String friends_timeline = "statuses/friends_timeline"; //	»ñÈ¡µ±Ç°µÇÂ¼ÓÃ»§¼°ÆäËù¹Ø×¢ÓÃ»§µÄ×îĞÂÎ¢²©
+	static final String home_timeline = "statuses/home_timeline";	//»ñÈ¡µ±Ç°µÇÂ¼ÓÃ»§¼°ÆäËù¹Ø×¢ÓÃ»§µÄ×îĞÂÎ¢²©" +
 		
-static final String friends_timeline_ids = "statuses/friends_timeline/ids"; //	»ñÈ¡µ±Ç°µÇÂ¼ÓÃ»§¼°ÆäËù¹Ø×¢ÓÃ»§µÄ×îĞÂÎ¢²©µÄID
+	static final String friends_timeline_ids = "statuses/friends_timeline/ids"; //	»ñÈ¡µ±Ç°µÇÂ¼ÓÃ»§¼°ÆäËù¹Ø×¢ÓÃ»§µÄ×îĞÂÎ¢²©µÄID
 //static final String statuses/user_timeline	»ñÈ¡ÓÃ»§·¢²¼µÄÎ¢²©
 //static final String statuses/user_timeline/ids	»ñÈ¡ÓÃ»§·¢²¼µÄÎ¢²©µÄID 
 //static final String statuses/repost_timeline	·µ»ØÒ»ÌõÔ­´´Î¢²©µÄ×îĞÂ×ª·¢Î¢²©
@@ -28,4 +41,25 @@ static final String friends_timeline_ids = "statuses/friends_timeline/ids"; //	»
 //static final String statuses/upload	ÉÏ´«Í¼Æ¬²¢·¢²¼Ò»ÌõÎ¢²©
 //static final String statuses/upload_url_text	·¢²¼Ò»ÌõÎ¢²©Í¬Ê±Ö¸¶¨ÉÏ´«µÄÍ¼Æ¬»òÍ¼Æ¬url 
 //static final String emotions	»ñÈ¡¹Ù·½±íÇé
+
+
+public static Date parseDate(String str, String format) throws WeiboException{
+	if(str==null||"".equals(str)){
+    	return null;
+    }
+	SimpleDateFormat sdf = formatMap.get(format);
+    if (null == sdf) {
+        sdf = new SimpleDateFormat(format, Locale.ENGLISH);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        formatMap.put(format, sdf);
+    }
+    try {
+        synchronized(sdf){
+            // SimpleDateFormat is not thread safe
+            return sdf.parse(str);
+        }
+    } catch (ParseException pe) {
+        throw new WeiboException("Unexpected format(" + str + ") returned from sina.com.cn");
+    }
+}	
 }

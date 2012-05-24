@@ -12,7 +12,17 @@ public class oAuthHelper {
 	private String token;
 	private String tokenSecret;
 	
+	private static String uid;
+	
 	private oAuthHelper() {};
+	
+	public void setuid(String id) {
+		uid = id;
+	}
+	
+	public String getuid(){
+		return uid;
+	}
 	
 	public static synchronized oAuthHelper getInstance() {
 		if (oauthinstance == null){
