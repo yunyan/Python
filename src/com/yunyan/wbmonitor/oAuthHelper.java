@@ -21,13 +21,6 @@ public class oAuthHelper {
 		return oauthinstance;
 	}
 	
-	public static synchronized Weibo getWeibo() {
-		if(wb == null){
-			wb = Weibo.getInstance();
-		}
-		return wb;
-	}
-	
 	public AccessToken getAccessToken() {
 		return acToken;
 	}

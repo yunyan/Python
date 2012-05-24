@@ -28,21 +28,10 @@ public class WbmonitorActivity extends Activity implements WeiboDialogListener{
 	private OnClickListener mOAuthBtnListener = new OnClickListener() {
 		public void onClick(View v) {
 			Toast.makeText(getApplicationContext(), "OAuth", Toast.LENGTH_LONG).show();	
-			Weibo wb = oAuthHelper.getWeibo();
+			Weibo wb = Weibo.getInstance();
 			wb.setupConsumerConfig(APPKEY, APPSECRET);
 			wb.setRedirectUrl("http://www.weibo.com");
-			wb.authorize(WbmonitorActivity.this, WbmonitorActivity.this);
-			
-//			try{
-//				RequestToken rqToken = wb.getRequestToken(getApplicationContext(), APPKEY, APPSECRET, URL_CALLBACK);
-//				oAuthHelper.getInstance().setRequestToken(rqToken);
-//	
-//				Uri uri = Uri.parse(Weibo.URL_AUTHENTICATION + "?display=wap2.0&oauth_token=" + rqToken.getToken() + "&from=" + WbmonitorActivity.FROM);
-//				startActivity(new Intent(Intent.ACTION_VIEW, uri));
-//			} catch (Exception e) {
-//				Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
-//			}	
-			
+			wb.authorize(WbmonitorActivity.this, WbmonitorActivity.this);			
 		}
 	};
 	
@@ -60,12 +49,11 @@ public class WbmonitorActivity extends Activity implements WeiboDialogListener{
 		// TODO Auto-generated method stub
         String token = values.getString("access_token");
         String expires_in = values.getString("expires_in");
-        AccessToken accessToken = new AccessToken(token, oAuthHelper.getWeibo().getAppSecret());
+        AccessToken accessToken = new AccessToken(token, Weibo.getInstance().getAppSecret());
         accessToken.setExpiresIn(expires_in);
         Weibo.getInstance().setAccessToken(accessToken);
         Intent intent = new Intent();
         intent.setClass(WbmonitorActivity.this, oAuthResult.class);
-       // intent.setClass(,  oAuthResult.class);
         startActivity(intent);
         
 	}

@@ -21,10 +21,10 @@ import com.weibo.net.WeiboParameters;
 
 public class oAuthResult extends Activity {
 
-	private OnClickListener mGoClickListner = new OnClickListener() {
+	private OnClickListener mGetTimelineClickListner = new OnClickListener() {
 		public void onClick(View v) {
 			try {
-				getTimeLine(oAuthHelper.getWeibo());
+				getTimeLine(Weibo.getInstance());
 			}catch (Exception e){
 				Toast.makeText(getApplicationContext(),e.toString(), Toast.LENGTH_LONG).show();
 				e.printStackTrace();			
@@ -37,7 +37,7 @@ public class oAuthResult extends Activity {
 		String url = wb.SERVER + "statuses/home_timeline.json";
 		WeiboParameters bundle = new WeiboParameters();
 		bundle.add("source", Weibo.getAppKey());
-		bundle.add("oauth_verifier", oAuthHelper.getWeibo().getAccessToken().getVerifier());
+		bundle.add("oauth_verifier", Weibo.getInstance().getAccessToken().getVerifier());
 		
 		String rlt = wb.request(this, url, bundle, "GET", wb.getAccessToken());		
 		
@@ -50,21 +50,8 @@ public class oAuthResult extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.oauthresult);
 		
-		Button btnGo = (Button)findViewById(R.id.Button01);
-		btnGo.setOnClickListener(mGoClickListner);
-		
-//		Uri uri = this.getIntent().getData();	
-//		
-//		
-//		String oauth_verifier = uri.getQueryParameter("oauth_verifier");
-//		oAuthHelper.getWeibo().addOauthverifier(oauth_verifier);
-//		
-//		try {
-//			oAuthHelper.getInstance().setAccessToken(oAuthHelper.getWeibo().generateAccessToken(getApplicationContext(), null));
-//		}catch (Exception e){
-//			Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
-//		}
-
+		Button btnGetTimeline = (Button)findViewById(R.id.btn_gettimeline);
+		btnGetTimeline.setOnClickListener(mGetTimelineClickListner);
 	}
 	
 
