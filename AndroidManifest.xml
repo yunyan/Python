@@ -28,7 +28,8 @@
              </intent-filter>
             
          </activity>
-         <activity android:name="OperationActivity"></activity>
+         <activity android:name="OperationActivity"
+             android:configChanges="orientation"></activity>
              
     </application>
     

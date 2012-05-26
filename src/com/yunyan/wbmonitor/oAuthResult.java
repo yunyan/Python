@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.weibo.net.Weibo;
 import com.weibo.net.WeiboException;
@@ -33,6 +34,7 @@ public class oAuthResult extends ListActivity {
 	private ListActivity mContext;
 	ProgressDialog dialog;
 	List<WeiboUser> mUserlist = null;
+	String mErrorString = null;
 	
 	class GetUserListTask extends AsyncTask<ListActivity, Integer, List<WeiboUser>> 
 	{
@@ -88,7 +90,9 @@ public class oAuthResult extends ListActivity {
 			
 			return userlist;
 		}
-		
+		private void getScreen_name(Context context, Weibo wb) throws WeiboException, JSONException {
+			
+		}
 		private void getUID(Context context, Weibo wb) throws WeiboException, JSONException {
 			String url = Weibo.SERVER + "account/get_uid.json";
 			
@@ -110,8 +114,12 @@ public class oAuthResult extends ListActivity {
 			try {
 				getUID(arg0[0], Weibo.getInstance());
 				userlist = getFriends(arg0[0], Weibo.getInstance());
-			} catch (Exception e){
-				e.printStackTrace();	
+			} catch (WeiboException e){
+				e.printStackTrace();					
+				mErrorString = new String(e.getMessage());				
+			} catch (JSONException e) {
+				e.printStackTrace();
+				mErrorString = new String(e.getMessage());
 			}
 			
 			return userlist;
@@ -129,17 +137,25 @@ public class oAuthResult extends ListActivity {
 			super.onPostExecute(result);
 			Log.d("iAsycTask", "onPostExecute");	
 			
-			List<String> user_name_list = new ArrayList<String>();
-			
-
-			for(WeiboUser user: result) {
-				user_name_list.add(user.screen_name());
-			}
-			
-			mlv.setAdapter(new ArrayAdapter<String>(mContext, R.layout.oauthresult, user_name_list));
 			dialog.dismiss();
 			
-			mUserlist = result;
+			if(result != null) {
+				List<String> user_name_list = new ArrayList<String>();
+				for(WeiboUser user: result) {
+					user_name_list.add(user.screen_name());
+				}
+				mlv.setAdapter(new ArrayAdapter<String>(mContext, R.layout.oauthresult, user_name_list));
+				
+				mUserlist = result;
+			}else{
+				if(mErrorString != null) {
+					Toast.makeText(mContext, mErrorString, Toast.LENGTH_LONG).show();
+					mErrorString = null;
+				}else{
+					Toast.makeText(mContext, "您还没有关注任何朋友", Toast.LENGTH_LONG).show();
+				}
+				finish();
+			}
 		}
 
 		@Override
