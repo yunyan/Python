@@ -24,11 +24,6 @@ if __name__ == '__main__':
     except getopt.GetoptError as err:
         print (err)
         
-    if len(opt) == 0:
-        print("Usage:")
-        print(sys.argv[0], "-s [url] -o [destination]")
-        sys.exit(1)
-
     url = None
     dest = "."
     for o, v in opt:
@@ -36,6 +31,13 @@ if __name__ == '__main__':
             url = v
         elif o == "-o":
             dest = v
+
+    if url == None:
+        print("Usage:")
+        print(sys.argv[0], "-s url [-o destination]")
+        sys.exit(1)
+
+
     main(url, dest)
 
             
