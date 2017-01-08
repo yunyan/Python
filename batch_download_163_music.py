@@ -1,11 +1,9 @@
+#!/usr/bin/python3
+
 import sys
 import re
-
-try:
-    from urllib.request import urlopen
-except:
-    from urllib2 import urlopen
-#import urllib2
+from subprocess import call
+from urllib.request import urlopen
 
 def main(url):
     add = url[0]
@@ -16,7 +14,8 @@ def main(url):
     for i in l:
         download_list.append("http://music.163.com/#"+i)
     for i in download_list:
-        print(i)
+        call(["you-get", i])
+        
 
 
 if __name__ == '__main__':
