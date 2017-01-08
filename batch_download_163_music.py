@@ -29,7 +29,7 @@ def download_netease(url, dest, dry_run):
     rs = urllib.request.urlopen(url).read().decode('utf8')
 
     #<a href="/song?id=5276807">悲怆奏鸣曲</a>
-    dl_list = re.findall(r'<a href\=\"(\/song\?id=\d+)\">([\w\s]+)', rs)
+    dl_list = re.findall(r'<a href\=\"(\/song\?id=\d+)\">([\w\s\(\)]+)', rs)
     for i in dl_list:
         dl[i[1]] = "http://music.163.com/#"+i[0]
 
@@ -52,7 +52,6 @@ def download_xiami(url, dest, dry_run):
     dl_list = re.findall(r'<a href\=\"(\/song\/[\d\w]+?)\".+>([\w\s\(\)]+?)<\/a>', rs)
     for l in dl_list:
         dl[l[1]] = "www.xiami.com"+l[0]
-    print (dl_list)
 
     download(dl, dest, dry_run)
 
