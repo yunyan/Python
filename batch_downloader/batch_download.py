@@ -17,13 +17,11 @@ def main(url, dest, dry_run):
     """
     if url.find("163") > 0:
         downloader = Netease(url, dest, dry_run)
-        downloader.prepare()
-        downloader.download()
-
     elif url.find("xiami") > 0:
         downloader = Xiami(url, dest, dry_run)
-        downloader.prepare()
-        downloader.download()
+
+    downloader.prepare()
+    downloader.download()
 
 
 if __name__ == '__main__':

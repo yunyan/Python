@@ -46,10 +46,15 @@ class Xiami(object):
         # album real link returns json string
         js = json.loads(res)
 
-        for track in js['data']['trackList']:
-            for audio in track['allAudios']:
-                if track['name'] not in dl_list or quality[dl_list[track['name']]['audioQualityEnum']] < quality[audio['audioQualityEnum']]:
-                    dl_list.update({track['name'] : audio})
+        if js['data']['trackList'] is not None:
+            # has tracks
+            for track in js['data']['trackList']:
+                for audio in track['allAudios']:
+                    if track['name'] not in dl_list or quality[dl_list[track['name']]['audioQualityEnum']] < quality[audio['audioQualityEnum']]:
+                        dl_list.update({track['name'] : audio})
+        else:
+            # no track found, print message
+            print(js['message'])
         
         return dl_list
 
@@ -162,6 +167,7 @@ class Xiami(object):
                         break
                     fp.write(buffer) 
                     received += len(buffer)
-                    print("Downloading.... {0} received {1:3.1f}%...\r".format(file_name, (received/total_size)*100), end="\r")
+                    print("Downloading.... {0} received {1:3.1f}%...".format(file_name, (received/total_size)*100), end="\r")
+
             if received == total_size:
                 os.rename(tmp_name, file_name)
