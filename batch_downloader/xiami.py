@@ -88,7 +88,8 @@ class Xiami(object):
             song_name = re.findall(r'\<h1\>([\w\s]+)\<*.', res)[0]
             print("Genrate download link for {0} ...".format(song_name))
             album_links = self.generate_download_link_from_album(album_id)
-            song_download_link[song_name] = album_links[song_name]
+            if album_links:
+                song_download_link[song_name] = album_links[song_name]
         except re.error as err:
             print("Can not find songs!")
             print(err.code, ": ", err.reason)
@@ -106,7 +107,11 @@ class Xiami(object):
             res = self.get_xiami_response(link_to_list)
 
         #<a href="/song/bj2rd8a32" title="">她来听我的演唱会</a>
-        songs = re.findall(r'<a href\=\"(\/song\/[\d\w]+)\".*>([\w\d]+)<', res)
+        #<a target="_blank" href="http://www.xiami.com/song/xMPX2ec031e" title="成都">成都</a>
+
+        #songs = re.findall(r'<a href\=\"(\/song\/[\d\w]+)\".*>([\w\d]+)<', res)
+        songs = re.findall(r'<a.*href\=\".*(\/song\/[\d\w]+)\".*>([\w\d]+)<', res)
+
         for song in songs:
             song_link = "http://www.xiami.com" + song[0]
             dl_list.update(self.generate_download_link_from_song(song_link))
