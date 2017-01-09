@@ -146,14 +146,16 @@ class Xiami(object):
         headers = {'User-Agent' : user_agent}
         data = None
 
+        if not os.path.exists(self.dest_):
+            os.makedirs(self.dest_)
+
         for name, detail in self.dl_.items():
  #           print(detail)
             received = 0
             total_size = detail['fileSize']
             file_type = detail['format']
-            file_name = name + '.' + file_type 
-            tmp_name = file_name + ".download"
-            file_name = os.path.join(self.dest_, file_name)
+            file_name = os.path.join(self.dest_, name + '.' + file_type)
+            tmp_name = os.path.join(self.dest_, name + '.' + file_type + '.download')
             req = urllib.request.Request(detail['filePath'], data, headers)
             try:
                 res = urllib.request.urlopen(req)
