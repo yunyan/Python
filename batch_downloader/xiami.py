@@ -56,8 +56,7 @@ class Xiami(object):
 
     def generate_download_link_from_album(self, link = None):
         """
-        http://www.xiami.com/song/playlist/id/1021909911/type/1/cat/json
-        http://www.xiami.com/album/w2do452d7?spm=a1z1s.3061781.6856533.8.pRX4fN
+        generate download link
         """
 
         if link is not None:
