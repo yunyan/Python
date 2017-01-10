@@ -22,8 +22,8 @@ def main(argv):
                 else:
                     print("deleting {0} ...".format(file_with_path))
                     dels.append(file_with_path)
-    for f in dels:
-        os.remove(f)
+        for f in dels:
+            os.remove(f)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
