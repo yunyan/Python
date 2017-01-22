@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 
+"""
+batch downloads
+"""
+
 import sys
 import re
 import getopt
@@ -7,12 +11,14 @@ import subprocess
 import urllib.request
 import urllib.error
 import shutil
+import json
 
 def download(ls, dest, dry_run):
     """
     download
     """
-    cmd = ["you-get"]
+#    cmd = ["you-get"]
+    cmd = ["python", "F:\github\you-get\you-get"]
     target = ""
     if dest != None:
         cmd.append("-o")
@@ -41,28 +47,65 @@ def download_netease(url, dest, dry_run):
 
     download(dl, dest, dry_run)
 
-def download_xiami(url, dest, dry_run):
+def download_from_xiami_by_album(url, dest, dry_run):
     """
-    download_xiami
+    http://www.xiami.com/song/playlist/id/1021909911/type/1/cat/json
     """
+    album_index = url.rfind('album/')
     user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
     headers = {'User-Agent' : user_agent}
-    data = None 
-    dl = {}
-    req = urllib.request.Request(url, data, headers)
+    album_link = "http://www.xiami.com/song/playlist/id/"+url[album_index+6:]+"/type/1/cat/json"
+    data = None
+    dl_list = {}
+    req = urllib.request.Request(album_link, data, headers)
     try:
         rs = urllib.request.urlopen(req).read().decode('utf8')
     except urllib.error.HTTPError as err:
         print(err.code, ": ", err.reason)
         print(err.headers)
         sys.exit(1)
+    js = json.loads(rs)
+    for track in js['data']['trackList']:
+        print(track['name'])
+        for audio in track['allAudios']:
+#            print(audio)
+#            if audio['quality'] == 'h':
+#                print(audio['filePath'])
+            print(audio['quality'], ':', audio['rate'], ":" , audio['filePath'])
+   #         try:
+   #             dl_list[track['name']] = audios['filePath']
+            print("")
 
-   # <a href="/song/bj0xd47b7" title="我真的受伤了">
-    dl_list = re.findall(r'<a href\=\"(\/song\/[\d\w]+?)\".+>([\w\s\(\)]+?)<\/a>', rs)
-    for l in dl_list:
-        dl[l[1]] = "www.xiami.com"+l[0]
 
-    download(dl, dest, dry_run)
+
+def download_xiami(url, dest, dry_run):
+    """
+    download_xiami
+    """
+    if url.find('album') > 0:
+        download_from_xiami_by_album(url, dest, dry_run)
+    else:
+        # download_link should be 'http://www.xiami.com/song/playlist/id/'+{song id}+'/object_id/0/cat/json'
+        user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
+        headers = {'User-Agent' : user_agent}
+        data = None
+        dl = {}
+        req = urllib.request.Request(url, data, headers)
+        try:
+            rs = urllib.request.urlopen(req).read().decode('utf8')
+        except urllib.error.HTTPError as err:
+            print(err.code, ": ", err.reason)
+            print(err.headers)
+            sys.exit(1)
+
+        # <a href="/song/bj0xd47b7" title="我真的受伤了">
+        dl_list = re.findall(r'<a href\=\"(\/song\/[\d\w]+?)\".+>([\w\s\(\)]+?)<\/a>', rs)
+
+        for l in dl_list:
+            dl[l[1]] = "www.xiami.com"+l[0]
+
+        download(dl, dest, dry_run)
+
 
 def main(url, dest, dry_run):
     """
