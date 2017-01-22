@@ -3,11 +3,15 @@
 import sys
 import re
 import getopt
-import subprocess 
+import subprocess
 import urllib.request
 import urllib.error
+import shutil
 
 def download(ls, dest, dry_run):
+    """
+    download
+    """
     cmd = ["you-get"]
     target = ""
     if dest != None:
@@ -15,16 +19,18 @@ def download(ls, dest, dry_run):
         cmd.append(dest)
     if dry_run:
         cmd.append("-i")
-    cmd.append(target)    
-    
-    for name, id in ls.items():
-        cmd[len(cmd)-1] = id
-        print (cmd)
+    cmd.append(target)
+
+    for name, song_id in ls.items():
+        cmd[len(cmd)-1] = song_id
+        print(cmd)
         subprocess.call(cmd)
 
 def download_netease(url, dest, dry_run):
+    """
+    download_netease
+    """
     url = url.replace("#/", "")
-    download_list = []
     dl = {}
     rs = urllib.request.urlopen(url).read().decode('utf8')
 
@@ -33,9 +39,12 @@ def download_netease(url, dest, dry_run):
     for i in dl_list:
         dl[i[1]] = "http://music.163.com/#"+i[0]
 
-    download(dl, dest, dry_run)    
+    download(dl, dest, dry_run)
 
 def download_xiami(url, dest, dry_run):
+    """
+    download_xiami
+    """
     user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
     headers = {'User-Agent' : user_agent}
     data = None 
@@ -55,10 +64,10 @@ def download_xiami(url, dest, dry_run):
 
     download(dl, dest, dry_run)
 
-
-
-        
 def main(url, dest, dry_run):
+    """
+    main function
+    """
     if url.find("163") > 0:
         download_netease(url, dest, dry_run)
     elif url.find("xiami") > 0:
@@ -66,28 +75,36 @@ def main(url, dest, dry_run):
 
 
 if __name__ == '__main__':
+
+    # check if "you-get" exist
+    if shutil.which('you-get') is None:
+        print("Please install '''you-get''' first: pip3 install you-get")
+        sys.exit(1)
+    if sys.version_info[0] != 3:
+        print("Python3 is needed!")
+        sys.exit(1)
+
     try:
         opt, args = getopt.getopt(sys.argv[1:], "s:o:i")
     except getopt.GetoptError as err:
-        print (err)
-        
-    url = None
+        print(err)
+
+    page_to_download = None
     dest = "."
     dry_run = False
 
     for o, v in opt:
         if o == "-s":
-            url = v
+            page_to_download = v
         elif o == "-o":
             dest = v
         elif o == "-i":
             dry_run = True
 
-    if url == None:
+    if page_to_download is None:
         print("Usage:")
         print(sys.argv[0], "-s url [-o destination]")
         sys.exit(1)
 
-    main(url, dest, dry_run)
+    main(page_to_download, dest, dry_run)
 
-            
