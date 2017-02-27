@@ -21,8 +21,13 @@ class token_thread(threading.Thread):
     
     def refresh_token(self):
         request_token_cmd = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={APPID}&secret={APPSECRET}".format(APPID=self._app_id, APPSECRET=self._app_sec)
-        context = ssl._create_unverified_context()
-        response = urllib2.urlopen(request_token_cmd, context = context).read()
+
+        try:
+            response = urllib2.urlopen(request_token_cmd).read()
+        except ssl.CertificateError:
+            context = ssl._create_unverified_context()
+            response = urllib2.urlopen(request_token_cmd, context = context).read()
+
         result = json.loads(response)
         access_token = result[u'access_token']
         expires_in = result[u'expires_in']
@@ -39,7 +44,7 @@ class token_thread(threading.Thread):
 
         [token, expires_time] =  tokens[self._app_id]
         now = datetime.datetime.now()
-        time_rest = now - expires_time 
+        time_rest = expires_time - now
         if abs(time_rest.total_seconds()) < 10:
             print "rest seconds < 10", time_rest.total_seconds()
             self.refresh_token()
