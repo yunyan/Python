@@ -56,7 +56,6 @@ def main():
                         5)
 
         for s in ready_to_read:
-            print s, "is ready to read"
             conn, addr = s.accept()
             t = token_thread.token_thread([conn, addr])
             t.start()

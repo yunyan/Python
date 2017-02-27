@@ -42,12 +42,13 @@ class tokenHelper(object):
         if self._token_server_sock:
            self._token_server_sock.sendall(cmd)
            data = self._token_server_sock.recv(512)
-           print data
         else:
             print "_sock is None!"
+        self._disconnect_token_server()
+
         return data 
     
-    def disconnect_token_server(self):
+    def _disconnect_token_server(self):
         if self._token_server_sock:
             self._token_server_sock.close()
             self._token_server_sock = None
@@ -74,9 +75,8 @@ def main():
     server_info = [server_addr, server_port]
     app_info = [app_id, app_sec]
     th   =  tokenHelper(server_info, app_info)
-    th.get_token("APPLY")
-    #token.get_token("REFRESH")
-    th.disconnect_token_server()
+    tk = th.get_token("APPLY")
+    print tk
 
 if __name__ == '__main__':
     main()
