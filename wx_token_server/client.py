@@ -20,13 +20,13 @@ class tokenHelper(object):
             try:
                 s = socket.socket(af, socktype, proto)
             except socket.error as msg:
-                print msg
+                print (msg)
                 s = None
                 continue
             try:
                 s.connect(sa)
             except socket.error as msg:
-                print msg
+                print (msg)
                 s.close()
                 s = None
                 continue
@@ -43,7 +43,7 @@ class tokenHelper(object):
            self._token_server_sock.sendall(cmd)
            data = self._token_server_sock.recv(512)
         else:
-            print "_sock is None!"
+            print ("_sock is None!")
         self._disconnect_token_server()
 
         return data 
@@ -64,7 +64,7 @@ def main():
     try:
         opt, args = getopt.getopt(sys.argv[1:], "s:p:")
     except getopt.GetoptError as err:
-        print err
+        print (err)
 
     for o, v in opt:
         if o == "-s":
@@ -76,7 +76,7 @@ def main():
     app_info = [app_id, app_sec]
     th   =  tokenHelper(server_info, app_info)
     tk = th.get_token("APPLY")
-    print tk
+    print (tk)
 
 if __name__ == '__main__':
     main()

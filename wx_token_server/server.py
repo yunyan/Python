@@ -9,7 +9,7 @@ token_dict = {}
 close_socks_flag = False
 
 def sigint_handler(signum, frame):
-    print "you press ctrl-c"
+    print ("you press ctrl-c")
     close_socks_flag =  True
 
 def main():
@@ -26,7 +26,6 @@ def main():
     for res in socket.getaddrinfo(HOST, PORT, socket.AF_UNSPEC, socket.SOCK_STREAM, 
             0, socket.AI_PASSIVE):
         af, socktype, proto, cannoname, sa = res
-        print sa
         try:
             server_sock =  socket.socket(af, socktype, proto)
             server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -43,11 +42,11 @@ def main():
             continue
         break
     if server_sock is None:
-        print "Could not open socket"
+        print( "Could not open socket")
         sys.exit(1)
 
     while True:
-        print "waiting for connection\n"
+        print ("waiting for connection")
         ready_to_read, ready_to_write, in_error = \
                 select.select(
                         potential_readers,

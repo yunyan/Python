@@ -46,7 +46,6 @@ class token_thread(threading.Thread):
         now = datetime.datetime.now()
         time_rest = expires_time - now
         if abs(time_rest.total_seconds()) < 10:
-            print "rest seconds < 10", time_rest.total_seconds()
             self.refresh_token()
 
         return tokens[self._app_id][0]
@@ -59,9 +58,9 @@ class token_thread(threading.Thread):
                 token = self.apply_token()
             elif self._operation == "REFRESH":
                 token = self.refresh_token()
-            print token
+            print("token is {0}".format(token))
             self._conn.send(token)
         except Exception as err:
-            print err
+            print(err)
         finally:
             self._conn.close()
