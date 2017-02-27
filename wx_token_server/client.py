@@ -10,8 +10,8 @@ class tokenHelper(object):
     _token_server_sock = None
 
     def __init__(self, server_param, app_param):
-        [self._server_addr, self._server_port] = server_param
-        [self._app_id, self._app_sec] = app_param 
+        self._server_addr, self._server_port = server_param
+        self._app_id, self._app_sec = app_param 
 
 
     def _connect_token_server(self):

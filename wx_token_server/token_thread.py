@@ -16,7 +16,7 @@ class token_thread(threading.Thread):
 
     def __init__(self, net_info):
         threading.Thread.__init__(self)
-        [self._conn, self._addr] = net_info 
+        self._conn, self._addr = net_info 
 
     
     def refresh_token(self):
@@ -42,7 +42,7 @@ class token_thread(threading.Thread):
         if not tokens.has_key(self._app_id):
             self.refresh_token()
 
-        [token, expires_time] =  tokens[self._app_id]
+        token, expires_time =  tokens[self._app_id]
         now = datetime.datetime.now()
         time_rest = expires_time - now
         if abs(time_rest.total_seconds()) < 10:
@@ -52,7 +52,7 @@ class token_thread(threading.Thread):
 
     def run(self):
         data = self._conn.recv(1024)
-        [self._operation, self._app_id, self._app_sec] = data.split('|')
+        self._operation, self._app_id, self._app_sec = data.split('|')
         try:
             if self._operation == "APPLY":
                 token = self.apply_token()
