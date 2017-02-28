@@ -35,6 +35,7 @@ class tokenHelper(object):
 
 
     def get_token(self, get_type):
+        data = None
         if self._token_server_sock is None:
             self._connect_token_server()
 

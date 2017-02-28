@@ -3,6 +3,7 @@ import urllib2
 import ssl
 import datetime
 import json
+import sys
 
 tokens  =  {}
 
@@ -21,12 +22,19 @@ class token_thread(threading.Thread):
     
     def refresh_token(self):
         request_token_cmd = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={APPID}&secret={APPSECRET}".format(APPID=self._app_id, APPSECRET=self._app_sec)
+        response = None
 
         try:
             response = urllib2.urlopen(request_token_cmd).read()
-        except ssl.CertificateError:
-            context = ssl._create_unverified_context()
-            response = urllib2.urlopen(request_token_cmd, context = context).read()
+        except urllib2.URLError as ex:
+            if isinstance(ex.reason, ssl.SSLError):
+                context = ssl._create_unverified_context()
+                response = urllib2.urlopen(request_token_cmd, context = context).read()
+            else:
+                print("unknown error: {0}:{1}".format(type(ex.reason), ex.reason))
+                raise
+        except:
+            raise
 
         result = json.loads(response)
         access_token = result[u'access_token']
