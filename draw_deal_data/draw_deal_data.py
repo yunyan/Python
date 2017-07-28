@@ -1,8 +1,8 @@
 import json
 import sys
+import glob
+import os
 from pyecharts import Line
-
-json_file = '/tmp/export.json'
 
 def load_js(jsfile):
     x_axis = []
@@ -17,14 +17,15 @@ def load_js(jsfile):
             points.append(deal_dict['unitPrice'][0])
     return x_axis, points
 
-def draw_line(x_axis, points):
-    line = Line("Deal Curve")
-    line.add("Deal", x_axis, points, is_stack=True, is_label_show=True)
-    line.show_config()
-    line.render()
-
-
 if __name__ == '__main__':
-    jsfile = sys.argv[1]
-    x_axis, points = load_js(jsfile)
-    draw_line(x_axis, points)
+    dir_path = sys.argv[1]
+    curve_name = ''
+    line = Line("Deal Curve")
+    cwd = os.getcwd()
+    os.chdir(dir_path)
+    for js in glob.glob("*.json"):
+        x_axis, points = load_js(js)
+        curve_name = js[:js.find(".json")]
+        line.add(curve_name, x_axis, points, is_stack=True, is_label_show=True)
+    os.chdir(cwd)
+    line.render()
