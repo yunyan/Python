@@ -3,17 +3,17 @@ import math
 import time
 
 class House():
-    _consruction_area = 0
+    _construction_area = 0
     _inner_area = 0
     _price_per_square = 0
 
     def __init__(self, construction_area, inner_area, price_per_square):
-        self._consruction_area = construction_area
+        self._construction_area = construction_area
         self._inner_area = inner_area
         self._price_per_square = price_per_square
 
     def get_total_price(self, construction_area = True):
-        return self._consruction_area * self._price_per_square if construction_area is True else self._inner_area * self._price_per_square
+        return self._construction_area * self._price_per_square if construction_area is True else self._inner_area * self._price_per_square
 
 class Payment():
     _total_price = 0
