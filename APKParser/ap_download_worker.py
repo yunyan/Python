@@ -19,14 +19,15 @@ class ap_download_worker(Thread):
         self.queue = queue
         self.id = id
 
-    def set_parser(parser):
+    def set_parser(self, parser):
         self.ap_parser = parser
 
-    def download_link(self, dir, link):
+    def download_link(self, directory, link):
         logger.info("worker {} start downloading {}".format(self.id, link))
-       # file_name = 'tmp.apk'
+        file_name = 'tmp.apk'
+        #local_file = os.path.join(directory, file_name)
        # local_file, headers = urllib.request.urlretrieve(link, os.path.join(dir, file_name))
-       # return local_file
+        return file_name
   
 
     def run(self):
