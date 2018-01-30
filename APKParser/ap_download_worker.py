@@ -4,7 +4,7 @@ from ap_logging import *
 import urllib
 import os
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("APKParser")
 
 headers = []
 
@@ -23,7 +23,7 @@ class ap_download_worker(Thread):
         self.ap_parser = parser
 
     def download_link(self, directory, link):
-        logger.info("worker {} start downloading {}".format(self.id, link))
+        logger.debug("worker {} start downloading {}".format(self.id, link))
         file_name = 'tmp.apk'
         #local_file = os.path.join(directory, file_name)
        # local_file, headers = urllib.request.urlretrieve(link, os.path.join(dir, file_name))
@@ -35,7 +35,7 @@ class ap_download_worker(Thread):
             try:
                 dir, link = self.queue.get(timeout = 2)
             except Empty:
-                logger.info("No tasks for worker {}".format(self.id))
+                logger.debug("No tasks for worker {}".format(self.id))
                 break
 
             local_file = self.download_link(dir, link)
