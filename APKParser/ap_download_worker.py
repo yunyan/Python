@@ -23,7 +23,7 @@ class ap_download_worker(Thread):
         self.ap_parser = parser
 
     def download_link(self, dir, link):
-        logger.info("downloader {} start downloading {}".format(self.id, link))
+        logger.info("worker {} start downloading {}".format(self.id, link))
        # file_name = 'tmp.apk'
        # local_file, headers = urllib.request.urlretrieve(link, os.path.join(dir, file_name))
        # return local_file
@@ -34,7 +34,7 @@ class ap_download_worker(Thread):
             try:
                 dir, link = self.queue.get(timeout = 2)
             except Empty:
-                logger.info("downloader {}'s queue is empty".format(self.id))
+                logger.info("No tasks for worker {}".format(self.id))
                 break
 
             local_file = self.download_link(dir, link)
